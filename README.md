@@ -8,6 +8,7 @@ Donation Trackerで匿名のコメント無し寄付を自動承認する
 
 ```json
 {
+  "trackerUrl": "Donation TrackerのURL",
   "username": "ユーザ名",
   "password": "パスワード",
   "eventId": イベントID,
