@@ -1,35 +1,36 @@
 {
-  "name": "rchan3",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "dependencies": {
-    "axios": "^0.24.0",
-    "axios-cookiejar-support": "^2.0.3",
-    "cheerio": "^1.0.0-rc.10",
-    "config": "^3.3.6",
-    "tough-cookie": "^4.0.0"
-  },
-  "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/config": "^0.0.34",
-    "@types/node": "^12.11.2",
-    "eslint": "^7.29.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "prettier": "^2.3.2",
-    "ts-node": "^10.0.0",
-    "tslib": "^2.3.0",
-    "typescript": "^4.3.5"
-  },
-  "scripts": {
-    "start": "node build/js/index.js",
-    "devstart": "ts-node --files src/js/index.ts",
-    "build": "tsc",
-    "lint": "tslint src/**/*.ts",
-    "docker:build": "docker build . -t pasta04/rchan3:latest",
-    "docker:start": "docker-compose up -d",
-    "docker:bash": "docker exec -i -t rchan3 bash"
-  },
-  "license": "MIT"
+    "name": "rchan3",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "dependencies": {
+        "axios": "^0.24.0",
+        "axios-cookiejar-support": "^4.0.3",
+        "cheerio": "^1.0.0-rc.10",
+        "config": "^3.3.6",
+        "tough-cookie": "^4.0.0"
+    },
+    "devDependencies": {
+        "@types/axios": "^0.14.0",
+        "@types/config": "^0.0.34",
+        "@types/node": "^12.11.2",
+        "eslint": "^7.29.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "prettier": "^2.3.2",
+        "ts-node": "^10.0.0",
+        "tslib": "^2.3.0",
+        "typescript": "^4.3.5"
+    },
+    "scripts": {
+        "start": "node build/js/index.js",
+        "devstart": "ts-node --files src/js/index.ts",
+        "build": "tsc",
+        "lint": "tslint src/**/*.ts",
+        "docker:build": "docker buildx build . --platform linux/amd64,linux/arm64/v8 -t pasta04/rchan3:latest",
+        "docker:push": "docker buildx build . --platform linux/amd64,linux/arm64/v8 -t pasta04/rchan3:latest --push",
+        "docker:start": "docker-compose up -d",
+        "docker:bash": "docker exec -i -t rchan3 bash"
+    },
+    "license": "MIT"
 }
