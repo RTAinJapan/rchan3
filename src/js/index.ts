@@ -69,8 +69,8 @@ const loginTracker = async () => {
   let url = `${config.trackerUrl}/admin/`;
   console.log(`GET ${url}`);
   const res1 = await client.get(url);
-  let $ = cheerio.load(res1.data);
-  let csrfmiddlewaretoken = $('#login-form > input[type=hidden]').attr('value');
+  const $ = cheerio.load(res1.data);
+  const csrfmiddlewaretoken = $('#login-form > input[type=hidden]').attr('value');
   if (!csrfmiddlewaretoken) throw new Error('ログインページのトークン取得に失敗');
   // console.log(`csrfmiddlewaretoken=${csrfmiddlewaretoken}`);
   // console.log(res1.headers['set-cookie']);
@@ -104,7 +104,7 @@ const checkAndApprove = async () => {
   // console.log(JSON.stringify(res1, null, '  '));
 
   for (const item of res1) {
-    if (item.fields.donor__public === config.anonymousName && item.fields.comment === '' && item.fields.commentstate === "PENDING") {
+    if (item.fields.donor__public === config.anonymousName && item.fields.comment === '' && item.fields.commentstate === 'PENDING') {
       await approveComment(item.pk, config.eventId);
     }
   }

@@ -12,6 +12,8 @@
     "devDependencies": {
         "@types/axios": "^0.14.0",
         "@types/node": "^22.13.9",
+        "@typescript-eslint/eslint-plugin": "^8.5.0",
+        "@typescript-eslint/parser": "^8.5.0",
         "dotenv-cli": "^8.0.0",
         "eslint": "^9.22.0",
         "eslint-config-prettier": "^9.1.0",
