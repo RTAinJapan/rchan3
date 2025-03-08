@@ -1,11 +1,12 @@
-version: '3.8'
-
 services:
   rchan3:
-    image: pasta04/rchan3
+    image: ghcr.io/rtainjapan/rchan3:latest
     container_name: rchan3
-    volumes:
-      - ./config:/usr/src/app/config
-    # environment:
-    #   - HOGE: 1234
+    environment:
+      - TRACKER_URL=
+      - TRACKER_USERNAME=
+      - TRACKER_PASSWORD=
+      - TRACKER_EVENT_ID=
+      - TRACKER_ANONYMOUSENAME=
+      - CHECK_INTERVAL=
     restart: always
