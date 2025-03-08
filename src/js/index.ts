@@ -1,22 +1,53 @@
 import axios from 'axios';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
-import cheerio from 'cheerio';
-import configModule from 'config';
+import * as cheerio from 'cheerio';
 
 const jar = new CookieJar();
 const client = wrapper(axios.create({ jar }));
 
-const config: Config = configModule.util.toObject(configModule);
-console.log(config);
+let config: Config;
+
+/**
+ * 環境変数から設定値を取得
+ * @returns config
+ */
+const getConfig = (): Config => {
+  const data: Config = {
+    trackerUrl: process.env.TRACKER_URL as string,
+    username: process.env.TRACKER_USERNAME as string,
+    password: process.env.TRACKER_PASSWORD as string,
+    eventId: Number(process.env.TRACKER_EVENT_ID as string),
+    anonymousName: process.env.TRACKER_ANONYMOUSENAME as string,
+    checkInterval: Number(process.env.CHECK_INTERVAL ?? 30 * 1000),
+  };
+
+  if (!data.trackerUrl) {
+    throw new Error('The environment variable TRACKER_URL is not specified.');
+  }
+
+  if (!data.username) {
+    throw new Error('The environment variable TRACKER_USERNAME is not specified.');
+  }
+
+  if (!data.password) {
+    throw new Error('The environment variable TRACKER_PASSWORD is not specified.');
+  }
+
+  if (!data.eventId) {
+    throw new Error('The environment variable TRACKER_EVENT_ID is not specified.');
+  }
+
+  if (!data.anonymousName) {
+    throw new Error('The environment variable TRACKER_ANONYMOUSENAME is not specified.');
+  }
+
+  return data;
+};
 
 const main = async () => {
   try {
-    if (!config.trackerUrl || !config.trackerUrl.includes('http')) throw new Error('trackerUrl が指定されていないか、何かおかしいです');
-    if (!config.username) throw new Error('username が指定されていません。');
-    if (!config.password) throw new Error('password が指定されていません。');
-    if (!config.eventId || Number.isNaN(config.eventId)) throw new Error('eventId が指定されていません。');
-    if (!config.checkInterval || Number.isNaN(config.checkInterval)) throw new Error('checkInterval が指定されていません。');
+    config = getConfig();
 
     // ログイン
     await loginTracker();
@@ -25,7 +56,7 @@ const main = async () => {
     checkAndApprove();
     setInterval(() => {
       checkAndApprove();
-    }, config.checkInterval * 1000);
+    }, config.checkInterval);
   } catch (error) {
     console.error('何かエラーがあった');
     console.error(error);
@@ -60,7 +91,7 @@ const loginTracker = async () => {
     },
   });
 
-  // console.log(`status = ${res2.status} ${res2.statusText}`);
+  console.log(`status = ${res2.status} ${res2.statusText}`);
   console.log('ログイン完了');
 };
 
@@ -73,7 +104,7 @@ const checkAndApprove = async () => {
   // console.log(JSON.stringify(res1, null, '  '));
 
   for (const item of res1) {
-    if (item.fields.donor__public === '(匿名)' && item.fields.comment === '') {
+    if (item.fields.donor__public === config.anonymousName && item.fields.comment === '' && item.fields.commentstate === "PENDING") {
       await approveComment(item.pk, config.eventId);
     }
   }
